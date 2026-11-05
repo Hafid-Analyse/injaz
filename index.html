@@ -40,8 +40,12 @@
   --start-bg:rgba(242,84,125,.16); --plan-bg:rgba(124,108,242,.18); --quick-bg:rgba(22,169,130,.18); --archive-bg:rgba(142,152,172,.16);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+/* منع التمرير الأفقي وتكبير الخط التلقائي في الهاتف */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;touch-action:pan-y pinch-zoom}
+body{overflow-x:hidden;width:100%;max-width:100vw;overscroll-behavior-x:none}
+button{touch-action:manipulation}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Tajawal',system-ui,sans-serif;font-size:16px;line-height:1.55;transition:background .25s,color .25s}
-.wrap{max-width:520px;margin:0 auto;padding:16px 16px 48px}
+.wrap{max-width:520px;margin:0 auto;padding:16px 16px 48px;overflow-wrap:anywhere}
 .num{unicode-bidi:isolate;direction:ltr;display:inline-block}
 h1,h2,h3,p{margin:0}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -127,7 +131,13 @@ textarea{min-height:110px;resize:vertical}
 .idea.dragging{z-index:5;box-shadow:var(--shadow-lg);cursor:grabbing}
 .idea .txt{flex:1;min-width:0}
 .idea .txt b{display:block;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.idea .txt small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.idea .txt .stp{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:13px;font-weight:700;padding:3px 10px;border-radius:9px}
+.stp.s-idea{color:#5B6B8C;background:rgba(91,107,140,.12)}
+.stp.s-doing{color:#E2711D;background:rgba(255,138,91,.15)}
+.stp.s-done{color:#16A982;background:rgba(22,169,130,.13)}
+.stp.s-paused{color:#8A93A6;background:rgba(138,147,166,.14)}
+:root[data-theme="dark"] .stp.s-idea{color:#A9B6D3}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stp.s-idea{color:#A9B6D3}}
 .idea.done .txt b{color:var(--muted);text-decoration:line-through}
 .score{--p:0;width:44px;height:44px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:conic-gradient(var(--qc) calc(var(--p)*1%),var(--soft) 0)}
 .score span{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:800;font-size:14px}
@@ -188,7 +198,7 @@ textarea{min-height:110px;resize:vertical}
 .totals div{flex:1;background:var(--soft);border-radius:14px;padding:10px;text-align:center}
 .totals b{display:block;font-size:20px;font-weight:800}
 .totals small{color:var(--muted);font-size:13px}
-.matrix{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px;height:200px}
+.matrix{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr 1fr;gap:6px;height:200px}
 .matrix .cell{border-radius:12px;padding:8px 10px;font-size:12px;font-weight:700;color:var(--qc);background:var(--qb);opacity:.55}
 .matrix .cell.hit{opacity:1}
 .matrix .pt{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;background:var(--ink);border:4px solid var(--card);box-shadow:0 4px 12px rgba(0,0,0,.25);transition:all .7s cubic-bezier(.3,1.3,.5,1)}
@@ -197,7 +207,7 @@ textarea{min-height:110px;resize:vertical}
 .problem{color:var(--ink2);font-size:15px;margin-top:6px}
 
 /* الحالة */
-.status{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--soft);border-radius:14px;padding:4px}
+.status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;background:var(--soft);border-radius:14px;padding:4px}
 .status button{border:0;background:none;border-radius:11px;padding:9px 2px;font-size:13px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
 .status button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
 
@@ -219,7 +229,7 @@ textarea{min-height:110px;resize:vertical}
 .inst-head small{color:var(--muted);font-size:14px}
 .steps-list{margin:0 0 6px;padding-right:22px;line-height:2}
 
-.toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-90px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:14px;font-weight:700;font-size:15px;transition:transform .35s cubic-bezier(.3,1.3,.5,1);z-index:60;white-space:nowrap;box-shadow:var(--shadow-lg)}
+.toast{position:fixed;top:14px;left:50%;max-width:calc(100vw - 32px);overflow:hidden;text-overflow:ellipsis;transform:translate(-50%,-90px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:14px;font-weight:700;font-size:15px;transition:transform .35s cubic-bezier(.3,1.3,.5,1);z-index:60;white-space:nowrap;box-shadow:var(--shadow-lg)}
 .toast.on{transform:translate(-50%,0)}
 </style>
 </head>
@@ -254,7 +264,7 @@ textarea{min-height:110px;resize:vertical}
     </div>
     <div class="card pad" id="themeBlock" style="margin-bottom:14px" hidden>
       <label class="lbl">المظهر</label>
-      <div class="status" id="themeSeg" style="grid-template-columns:repeat(3,1fr)"></div>
+      <div class="status" id="themeSeg" style="grid-template-columns:repeat(3,minmax(0,1fr))"></div>
     </div>
     <button class="btn" id="saveSetup" type="button">حفظ والمتابعة</button>
   </section>
@@ -612,7 +622,7 @@ function cardHTML(x){
   const st = STATUS[x.st];
   return '<div class="card idea q-' + x.q + (x.st === 'done' ? ' done' : '') + '" data-id="' + x.id + '">' +
     '<div class="score" style="--p:' + x.s + '"><span>' + iso(x.s) + '</span></div>' +
-    '<div class="txt"><b>' + esc(x.n) + '</b><small>' + st[0] + ' ' + st[1] + ' · ' + iso(x.h || 0) + ' ساعة/أسبوع</small></div>' +
+    '<div class="txt"><b>' + esc(x.n) + '</b><span class="stp s-' + x.st + '">' + st[0] + ' ' + st[1] + '</span></div>' +
     '<span class="grip" aria-label="اسحب لتغيير الترتيب">' + ic('grip') + '</span></div>';
 }
 $('sections').addEventListener('click', e => {

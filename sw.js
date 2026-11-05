@@ -1,4 +1,4 @@
-const CACHE = 'injaz-v2';
+const CACHE = 'injaz-v3';
 const FILES = ['./', './index.html', './manifest.json', './logo.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
