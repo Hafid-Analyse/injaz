@@ -126,11 +126,11 @@ textarea{min-height:110px;resize:vertical}
 .list{display:grid;gap:10px}
 
 /* بطاقة الفكرة */
-.idea{position:relative;display:flex;align-items:center;gap:12px;padding:14px 16px 14px 10px;border-right:5px solid var(--qc);border-radius:18px;cursor:pointer;touch-action:pan-y;transition:transform .12s,box-shadow .2s}
+.idea{position:relative;display:flex;align-items:center;gap:12px;padding:14px 16px 14px 12px;border-right:5px solid var(--qc);border-radius:18px;cursor:pointer;touch-action:pan-y;transition:transform .12s,box-shadow .2s}
 .idea:active{transform:scale(.99)}
 .idea.dragging{z-index:5;box-shadow:var(--shadow-lg);cursor:grabbing}
 .idea .txt{flex:1;min-width:0}
-.idea .txt b{display:block;font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.idea .txt b{display:block;font-size:17px;font-weight:700;line-height:1.4;overflow-wrap:anywhere}
 .idea .txt .stp{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:13px;font-weight:700;padding:3px 10px;border-radius:9px}
 .stp.s-idea{color:#5B6B8C;background:rgba(91,107,140,.12)}
 .stp.s-doing{color:#E2711D;background:rgba(255,138,91,.15)}
@@ -141,8 +141,9 @@ textarea{min-height:110px;resize:vertical}
 .idea.done .txt b{color:var(--muted);text-decoration:line-through}
 .score{--p:0;width:44px;height:44px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:conic-gradient(var(--qc) calc(var(--p)*1%),var(--soft) 0)}
 .score span{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:800;font-size:14px}
-.grip{width:28px;height:40px;display:grid;place-items:center;color:var(--muted);cursor:grab;touch-action:none;border-radius:10px;flex-shrink:0}
-.grip svg{width:16px;height:16px}
+.grip{width:36px;height:48px;display:grid;place-items:center;color:var(--ink2);background:var(--soft);cursor:grab;touch-action:none;border-radius:12px;flex-shrink:0;align-self:center}
+.grip svg{width:20px;height:20px}
+.grip:active{background:var(--qb);color:var(--qc)}
 .q-start{--qc:var(--start);--qb:var(--start-bg)}
 .q-plan{--qc:var(--plan);--qb:var(--plan-bg)}
 .q-quick{--qc:var(--quick);--qb:var(--quick-bg)}
