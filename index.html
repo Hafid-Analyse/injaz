@@ -23,21 +23,21 @@
   --shadow:0 1px 2px rgba(20,24,40,.04),0 6px 20px rgba(20,24,40,.06);
   --shadow-lg:0 18px 40px rgba(20,24,40,.16);
   --accent:#F2547D; --grad:linear-gradient(135deg,#FF8A5B 0%,#F2547D 100%);
-  --start:#F2547D; --plan:#7C6CF2; --quick:#16A982; --archive:#8E98AC;
-  --start-bg:rgba(242,84,125,.10); --plan-bg:rgba(124,108,242,.11); --quick-bg:rgba(22,169,130,.11); --archive-bg:rgba(142,152,172,.14);
+  --start:#F2547D; --plan:#7C6CF2; --quick:#0EA5E9; --archive:#8E98AC;
+  --start-bg:rgba(242,84,125,.10); --plan-bg:rgba(124,108,242,.11); --quick-bg:rgba(14,165,233,.11); --archive-bg:rgba(142,152,172,.14);
   --danger:#E0354B;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0F1117; --card:#191C25; --ink:#ECEEF4; --ink2:#B3B9C8; --muted:#7D8597; --line:#272B37; --soft:#20242F;
     --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); --shadow-lg:0 18px 40px rgba(0,0,0,.5);
-    --start-bg:rgba(242,84,125,.16); --plan-bg:rgba(124,108,242,.18); --quick-bg:rgba(22,169,130,.18); --archive-bg:rgba(142,152,172,.16);
+    --start-bg:rgba(242,84,125,.16); --plan-bg:rgba(124,108,242,.18); --quick-bg:rgba(14,165,233,.18); --archive-bg:rgba(142,152,172,.16);
   }
 }
 :root[data-theme="dark"]{
   --bg:#0F1117; --card:#191C25; --ink:#ECEEF4; --ink2:#B3B9C8; --muted:#7D8597; --line:#272B37; --soft:#20242F;
   --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); --shadow-lg:0 18px 40px rgba(0,0,0,.5);
-  --start-bg:rgba(242,84,125,.16); --plan-bg:rgba(124,108,242,.18); --quick-bg:rgba(22,169,130,.18); --archive-bg:rgba(142,152,172,.16);
+  --start-bg:rgba(242,84,125,.16); --plan-bg:rgba(124,108,242,.18); --quick-bg:rgba(14,165,233,.18); --archive-bg:rgba(142,152,172,.16);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 /* منع التمرير الأفقي وتكبير الخط التلقائي في الهاتف */
@@ -138,7 +138,22 @@ textarea{min-height:110px;resize:vertical}
 .stp.s-paused{color:#8A93A6;background:rgba(138,147,166,.14)}
 :root[data-theme="dark"] .stp.s-idea{color:#A9B6D3}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stp.s-idea{color:#A9B6D3}}
-.idea.done .txt b{color:var(--muted);text-decoration:line-through}
+.q-done{--qc:#16A982;--qb:rgba(22,169,130,.12)}
+.idea.done{background:linear-gradient(0deg,rgba(22,169,130,.07),rgba(22,169,130,.07)),var(--card);border-color:rgba(22,169,130,.35)}
+/* قلب البطاقة */
+.idea{transition:transform .18s ease-in,box-shadow .2s}
+.idea.turn-out{transform:perspective(900px) rotateY(90deg)}
+.idea.turn-in{transform:perspective(900px) rotateY(-90deg);transition:none}
+.idea.back{display:block;cursor:default;padding:14px 16px}
+.idea.back .bh{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.idea.back .bh b{flex:1;min-width:0;font-size:15px;font-weight:800;color:var(--qc)}
+.idea.back .bh small{color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.idea.back textarea{min-height:120px;font-size:16px;background:var(--soft)}
+.idea.back .saved{font-size:12px;color:var(--muted);margin-top:6px;min-height:18px}
+.idea.back .bb{display:flex;gap:8px;margin-top:8px}
+.idea.back .bb button{flex:1;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px;font-weight:700;font-size:14px;color:var(--ink2)}
+.idea.back .bb button.pri{background:var(--qb);color:var(--qc);border-color:transparent}
+.note-dot{display:inline-flex;align-items:center;gap:4px;margin-top:6px;margin-right:6px;font-size:12px;font-weight:700;color:var(--muted)}
 .score{--p:0;width:44px;height:44px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:conic-gradient(var(--qc) calc(var(--p)*1%),var(--soft) 0)}
 .score span{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:800;font-size:14px}
 .grip{width:36px;height:48px;display:grid;place-items:center;color:var(--ink2);background:var(--soft);cursor:grab;touch-action:none;border-radius:12px;flex-shrink:0;align-self:center}
@@ -180,7 +195,7 @@ textarea{min-height:110px;resize:vertical}
 .verdict{border-radius:22px;padding:22px 18px;color:#fff;text-align:center;margin-bottom:14px}
 .verdict.q-start{background:linear-gradient(135deg,#FF8A5B,#F2547D)}
 .verdict.q-plan{background:linear-gradient(135deg,#9D91FF,#6F5FEA)}
-.verdict.q-quick{background:linear-gradient(135deg,#3FD3A9,#139C78)}
+.verdict.q-quick{background:linear-gradient(135deg,#38BDF8,#0284C7)}
 .verdict.q-archive{background:linear-gradient(135deg,#AEB6C6,#7F899E)}
 .verdict small{display:block;opacity:.9;font-size:14px;font-weight:700}
 .verdict h2{font-size:28px;font-weight:800;margin:4px 0}
@@ -315,7 +330,7 @@ textarea{min-height:110px;resize:vertical}
 
 <!-- نافذة تفاصيل الفكرة -->
 <div class="sheet-bg" id="sheetBg"></div>
-<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="handle"></div><div id="sheetBody"></div></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div style="display:flex;align-items:center;margin-bottom:6px"><span style="width:36px"></span><div class="handle" style="margin:0 auto"></div><button class="icon-btn" id="sheetClose" type="button" aria-label="إغلاق" style="width:36px;height:36px;font-size:20px;font-weight:700">×</button></div><div id="sheetBody"></div></div>
 
 <div class="toast" id="toast"></div>
 
@@ -355,7 +370,7 @@ const GATES = [
   {name:'الأثر',  max:35, color:'#F2547D'},
   {name:'العائد', max:15, color:'#FF8A5B'},
   {name:'القدرة', max:30, color:'#7C6CF2'},
-  {name:'السرعة', max:20, color:'#16A982'}
+  {name:'السرعة', max:20, color:'#0EA5E9'}
 ];
 const QS = [
   {g:0, t:'كم مرة يعيش الناس هذه المشكلة؟', o:[['يومياً',10],['أسبوعياً',7],['شهرياً',4],['نادراً',0]]},
@@ -608,23 +623,62 @@ function openBoard(){
     $('sections').innerHTML = '<div class="card empty"><img src="logo.svg" alt=""><b>ابدأ بأول فكرة</b><p>أجب عن 14 سؤالاً، وسأخبرك أين تضعها.</p></div>';
   } else {
     const closed = store.get('injaz_closed', {archive: true});
-    $('sections').innerHTML = QORDER.map(k => {
-      const items = all.filter(x => x.q === k);
+    // الأفكار المنجزة تخرج من خاناتها إلى قسم «المنجزة» في الأسفل
+    $('sections').innerHTML = QORDER.concat(['done']).map(k => {
+      const items = k === 'done' ? all.filter(x => x.st === 'done') : all.filter(x => x.q === k && x.st !== 'done');
       if (!items.length) return '';
       return '<div class="section q-' + k + (closed[k] ? ' closed' : '') + '" data-q="' + k + '">' +
-        '<button class="sec-head" type="button"><span class="dot" style="background:var(--qc)"></span><span class="t">' + QUADS[k].t + '</span>' +
+        '<button class="sec-head" type="button"><span class="dot" style="background:var(--qc)"></span><span class="t">' + (k === 'done' ? '✅ المنجزة' : QUADS[k].t) + '</span>' +
         '<span class="c">' + iso(items.length) + '</span><span class="sp"></span>' + ic('chev') + '</button>' +
         '<div class="list">' + items.map(cardHTML).join('') + '</div></div>';
     }).join('');
   }
   show('s-board');
 }
+function cardCls(x){ return 'card idea ' + (x.st === 'done' ? 'q-done done' : 'q-' + x.q); }
 function cardHTML(x){
   const st = STATUS[x.st];
-  return '<div class="card idea q-' + x.q + (x.st === 'done' ? ' done' : '') + '" data-id="' + x.id + '">' +
-    '<div class="score" style="--p:' + x.s + '"><span>' + iso(x.s) + '</span></div>' +
-    '<div class="txt"><b>' + esc(x.n) + '</b><span class="stp s-' + x.st + '">' + st[0] + ' ' + st[1] + '</span></div>' +
-    '<span class="grip" aria-label="اسحب لتغيير الترتيب">' + ic('grip') + '</span></div>';
+  return '<div class="' + cardCls(x) + '" data-id="' + x.id + '">' + frontHTML(x, st) + '</div>';
+}
+function frontHTML(x, st){
+  st = st || STATUS[x.st];
+  return '<div class="score" style="--p:' + x.s + '"><span>' + iso(x.s) + '</span></div>' +
+    '<div class="txt"><b>' + esc(x.n) + '</b><span class="stp s-' + x.st + '">' + st[0] + ' ' + st[1] + '</span>' +
+    (x.notes ? '<span class="note-dot">📝 ملاحظات</span>' : '') + '</div>' +
+    '<span class="grip" aria-label="اسحب لتغيير الترتيب">' + ic('grip') + '</span>';
+}
+function backHTML(x){
+  return '<div class="bh"><b>📝 ملاحظات وتحسينات</b></div>' +
+    '<small class="muted" style="display:block;margin-bottom:8px">' + esc(x.n) + '</small>' +
+    '<textarea class="notes" placeholder="اكتب تحسيناً أو ملاحظة…">' + esc(x.notes || '') + '</textarea>' +
+    '<div class="saved"></div>' +
+    '<div class="bb"><button type="button" class="pri" data-flip>↺ قلب البطاقة</button><button type="button" data-details>التفاصيل</button></div>';
+}
+// قلب البطاقة بحركة دوران، ثم تبديل الوجه
+function flip(c){
+  const id = +c.dataset.id, x = store.get('injaz_ideas', []).find(y => y.id === id);
+  if (!x || c.classList.contains('turn-out')) return;
+  const toBack = !c.classList.contains('back');
+  c.classList.add('turn-out');
+  setTimeout(() => {
+    c.classList.remove('turn-out'); c.classList.add('turn-in');
+    c.classList.toggle('back', toBack);
+    c.innerHTML = toBack ? backHTML(x) : frontHTML(x);
+    void c.offsetWidth;
+    c.classList.remove('turn-in');
+    if (toBack){
+      const ta = c.querySelector('textarea');
+      ta.addEventListener('input', () => {
+        clearTimeout(ta.t);
+        ta.t = setTimeout(() => {
+          const list = store.get('injaz_ideas', []), y = list.find(z => z.id === id);
+          if (!y) return;
+          y.notes = ta.value.trim(); store.set('injaz_ideas', list);
+          c.querySelector('.saved').textContent = '✓ حُفظت';
+        }, 400);
+      });
+    }
+  }, 180);
 }
 $('sections').addEventListener('click', e => {
   const h = e.target.closest('.sec-head');
@@ -637,7 +691,13 @@ $('sections').addEventListener('click', e => {
   }
   if (e.target.closest('.grip')) return;
   const c = e.target.closest('.idea');
-  if (c && !c.dataset.dragged) openSheet(+c.dataset.id);
+  if (!c) return;
+  if (c.classList.contains('back')){
+    if (e.target.closest('[data-flip]')) flip(c);
+    else if (e.target.closest('[data-details]')) openSheet(+c.dataset.id);
+    return;
+  }
+  flip(c);
 });
 
 // ===== نافذة التفاصيل =====
@@ -676,6 +736,7 @@ function openSheet(id){
 function closeSheet(){ $('sheet').classList.remove('on'); $('sheetBg').classList.remove('on'); sheetId = null; }
 function refreshBoard(){ const y = window.scrollY; const s = sheetId; openBoard(); window.scrollTo(0, y); if (s){ sheetId = s; $('sheet').classList.add('on'); $('sheetBg').classList.add('on'); } }
 $('sheetBg').onclick = closeSheet;
+$('sheetClose').onclick = closeSheet;
 
 // ===== السحب لإعادة الترتيب داخل القسم (يُحفظ) =====
 (() => {
