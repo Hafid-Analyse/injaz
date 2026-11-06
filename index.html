@@ -128,7 +128,16 @@ textarea{min-height:110px;resize:vertical}
 /* بطاقة الفكرة */
 .idea{position:relative;display:flex;align-items:center;gap:12px;padding:14px 16px 14px 12px;border-right:5px solid var(--qc);border-radius:18px;cursor:pointer;touch-action:pan-y;transition:transform .12s,box-shadow .2s}
 .idea:active{transform:scale(.99)}
-.idea.dragging{z-index:5;box-shadow:var(--shadow-lg);cursor:grabbing}
+.idea.dragging{z-index:5;box-shadow:var(--shadow-lg);cursor:grabbing;transition:none!important}
+/* قائمة تغيير الحالة */
+.stp{cursor:pointer;border:0;font-family:inherit}
+.stp::after{content:'';width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor;margin-right:2px;opacity:.7}
+.menu{position:fixed;z-index:50;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);padding:6px;min-width:170px;opacity:0;transform:scale(.92);transform-origin:top right;pointer-events:none;transition:opacity .15s,transform .15s}
+.menu.on{opacity:1;transform:none;pointer-events:auto}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;text-align:right;padding:11px 12px;border-radius:11px;font-size:15px;font-weight:700;color:var(--ink)}
+.menu button:hover,.menu button:active{background:var(--soft)}
+.menu button.on{background:var(--soft)}
+.menu button .ck{margin-right:auto;color:var(--accent);font-size:14px}
 .idea .txt{flex:1;min-width:0}
 .idea .txt b{display:block;font-size:17px;font-weight:700;line-height:1.4;overflow-wrap:anywhere}
 .idea .txt .stp{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:13px;font-weight:700;padding:3px 10px;border-radius:9px}
@@ -330,7 +339,7 @@ textarea{min-height:110px;resize:vertical}
 
 <!-- نافذة تفاصيل الفكرة -->
 <div class="sheet-bg" id="sheetBg"></div>
-<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div style="display:flex;align-items:center;margin-bottom:6px"><span style="width:36px"></span><div class="handle" style="margin:0 auto"></div><button class="icon-btn" id="sheetClose" type="button" aria-label="إغلاق" style="width:36px;height:36px;font-size:20px;font-weight:700">×</button></div><div id="sheetBody"></div></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="sh-top" style="display:flex;align-items:center;margin:-10px -16px 6px;padding:10px 16px 4px;cursor:grab"><span style="width:36px"></span><div class="handle" style="margin:0 auto"></div><button class="icon-btn" id="sheetClose" type="button" aria-label="إغلاق" style="width:36px;height:36px;font-size:20px;font-weight:700">×</button></div><div id="sheetBody"></div></div>
 
 <div class="toast" id="toast"></div>
 
@@ -643,7 +652,7 @@ function cardHTML(x){
 function frontHTML(x, st){
   st = st || STATUS[x.st];
   return '<div class="score" style="--p:' + x.s + '"><span>' + iso(x.s) + '</span></div>' +
-    '<div class="txt"><b>' + esc(x.n) + '</b><span class="stp s-' + x.st + '">' + st[0] + ' ' + st[1] + '</span>' +
+    '<div class="txt"><b>' + esc(x.n) + '</b><button type="button" class="stp s-' + x.st + '" data-status aria-label="تغيير الحالة">' + st[0] + ' ' + st[1] + '</button>' +
     (x.notes ? '<span class="note-dot">📝 ملاحظات</span>' : '') + '</div>' +
     '<span class="grip" aria-label="اسحب لتغيير الترتيب">' + ic('grip') + '</span>';
 }
@@ -693,10 +702,12 @@ $('sections').addEventListener('click', e => {
   const c = e.target.closest('.idea');
   if (!c) return;
   if (c.classList.contains('back')){
-    if (e.target.closest('[data-flip]')) flip(c);
-    else if (e.target.closest('[data-details]')) openSheet(+c.dataset.id);
+    if (e.target.closest('[data-details]')) openSheet(+c.dataset.id);
+    else if (!e.target.closest('textarea')) flip(c);
     return;
   }
+  const sb = e.target.closest('[data-status]');
+  if (sb){ openStatusMenu(sb, +c.dataset.id); return; }
   flip(c);
 });
 
@@ -733,6 +744,60 @@ function openSheet(id){
     closeSheet(); refreshBoard(); toast('تم الحذف');
   };
 }
+// ===== قائمة تغيير الحالة =====
+const menu = document.createElement('div'); menu.className = 'menu'; document.body.appendChild(menu);
+function openStatusMenu(btn, id){
+  const x = store.get('injaz_ideas', []).find(y => y.id === id); if (!x) return;
+  menu.innerHTML = Object.keys(STATUS).map(k => '<button type="button" data-st="' + k + '" class="' + (k === x.st ? 'on' : '') + '"><span>' + STATUS[k][0] + '</span>' + STATUS[k][1] + (k === x.st ? '<span class="ck">✓</span>' : '') + '</button>').join('');
+  const r = btn.getBoundingClientRect(), W = document.documentElement.clientWidth;
+  menu.classList.add('on');
+  const mh = menu.offsetHeight, mw = menu.offsetWidth;
+  const top = r.bottom + 6 + mh > innerHeight ? r.top - mh - 6 : r.bottom + 6;
+  menu.style.top = top + 'px';
+  menu.style.left = Math.max(12, Math.min(W - mw - 12, r.right - mw)) + 'px';
+  menu.onclick = e => {
+    const b = e.target.closest('[data-st]'); if (!b) return;
+    const list = store.get('injaz_ideas', []), y = list.find(z => z.id === id);
+    y.st = b.dataset.st; store.set('injaz_ideas', list);
+    closeMenu(); refreshBoard(); toast(STATUS[y.st][0] + ' ' + STATUS[y.st][1]);
+  };
+}
+function closeMenu(){ menu.classList.remove('on'); }
+document.addEventListener('pointerdown', e => { if (menu.classList.contains('on') && !menu.contains(e.target) && !e.target.closest('[data-status]')) closeMenu(); }, true);
+addEventListener('scroll', closeMenu, {passive: true});
+
+// ===== سحب النافذة للأسفل لإغلاقها، وهي تتبع الإصبع =====
+(() => {
+  const sh = $('sheet'), bg = $('sheetBg');
+  let y0 = null, dy = 0, t0 = 0, active = false;
+  const start = (y, fromTop) => { if (!sh.classList.contains('on')) return; if (sh.scrollTop > 0 && !fromTop) return; y0 = y; dy = 0; t0 = Date.now(); active = false; };
+  const move = (y, ev) => {
+    if (y0 === null) return;
+    dy = y - y0;
+    if (!active && dy > 6) active = true;
+    if (!active) return;
+    if (ev && ev.cancelable) ev.preventDefault();
+    const d = Math.max(0, dy);
+    sh.style.transition = 'none'; bg.style.transition = 'none';
+    sh.style.transform = 'translateY(' + d + 'px)';
+    bg.style.opacity = Math.max(0, 1 - d / (sh.offsetHeight || 1));
+  };
+  const end = () => {
+    if (y0 === null) return;
+    const v = dy / Math.max(1, Date.now() - t0);
+    sh.style.transition = ''; bg.style.transition = ''; sh.style.transform = ''; bg.style.opacity = '';
+    if (active && (dy > sh.offsetHeight * .25 || v > .6)) closeSheet();
+    y0 = null; active = false;
+  };
+  sh.addEventListener('touchstart', e => start(e.touches[0].clientY, e.target.closest('.sh-top')), {passive: true});
+  sh.addEventListener('touchmove', e => move(e.touches[0].clientY, e), {passive: false});
+  sh.addEventListener('touchend', end); sh.addEventListener('touchcancel', end);
+  // بالفأرة من أعلى النافذة
+  sh.addEventListener('mousedown', e => { if (e.target.closest('.sh-top') && !e.target.closest('button')) start(e.clientY, true); });
+  addEventListener('mousemove', e => { if (y0 !== null) move(e.clientY); });
+  addEventListener('mouseup', end);
+})();
+
 function closeSheet(){ $('sheet').classList.remove('on'); $('sheetBg').classList.remove('on'); sheetId = null; }
 function refreshBoard(){ const y = window.scrollY; const s = sheetId; openBoard(); window.scrollTo(0, y); if (s){ sheetId = s; $('sheet').classList.add('on'); $('sheetBg').classList.add('on'); } }
 $('sheetBg').onclick = closeSheet;
